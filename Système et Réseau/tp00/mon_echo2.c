@@ -1,19 +1,20 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-int main(int argc, char** argv){
+int main(int agrc, char **argv){
     argv++;
-    while(*argv != NULL){
-        while(**argv != '\0'){
+    while (NULL != *argv) {
+        while (**argv != '\0') {
             putchar(**argv);
             (*argv)++;
         }
-        if ( *(argv+1)!= NULL){
+        if (*(argv+1) != NULL){
             putchar(' ');
         }
         argv++;
-    }
-    printf("\n");
+    }    
+    putchar('\n');
     return 0;
+    
 }
