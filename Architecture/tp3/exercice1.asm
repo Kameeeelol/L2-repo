@@ -1,0 +1,38 @@
+.ORIG x3000
+
+IN ; lire un charactère
+
+LD R1, NEUF
+NOT R1, R1
+ADD R1, R1, #1
+ADD R1, R0, R1
+BRp fin
+
+LD R1, ZERO
+NOT R1, R1
+ADD R1, R1, #1
+ADD R1, R0, R1
+BRn fin
+
+LD R2, ZERO
+NOT R2, R2
+ADD R2, R2, #1
+ADD R0, R0, R2
+BRnzp END
+
+fin
+
+LD R0, NEG_UN
+
+END 
+
+LEA R0, msg
+PUTS
+OUT 
+
+HALT
+ZERO .FILL x30
+NEUF .FILL x39
+NEG_UN .FILL xFFFF
+msg .STRINGZ "\nRésultat : "
+.END

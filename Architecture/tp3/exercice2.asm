@@ -1,0 +1,9 @@
+.ORIG x3000
+
+ADD R1,R0,R0 ; R0 = R0 x 2
+ADD R1,R1,R1 ; R1 = R0 x 4
+ADD R1,R1,R1 ; R1 = R0 x 8
+
+ADD R2,R0,R0 ; R2 = R0 x 2
+
+ADD R0,R1,R2 ; R0 = R0 x 10
