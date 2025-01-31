@@ -11,17 +11,44 @@ void incorporer_blancs_neige(void);
 
 int main(void)
 {
-	int i;
+    pid_t c1, c2, c3;
 
-	casser_chocolat();
-	faire_fondre_chocolat();
-	for (i = 0; i < 6; ++i)
-		separer_blanc_jaune();
-	battre_blancs_neige();
-	melanger_jaunes_choco();
-	incorporer_blancs_neige();
+    c1 = fork();
+    if (c1 == 0) {
+        // Processus des œufs : séparation + battage des blancs
+        for (int i = 0; i < 6; ++i) {
+            if (fork() == 0) {
+                separer_blanc_jaune();
+                return 0;
+            }
+        }
+        while (wait(NULL) != -1); // Attend les 6 séparations
+        battre_blancs_neige();     // 0.6s (commence à 0.2s, fin à 0.8s)
+        return 0;
+    }
 
-	printf("PID %d : la mousse est terminée !\n", getpid());
+    c2 = fork();
+    if (c2 == 0) {
+        // Processus du chocolat : cassage + fonte
+        casser_chocolat();       // 0.2s
+        faire_fondre_chocolat(); // 1.0s (commence à 0.2s, fin à 1.2s)
+        return 0;
+    }
+
+    c3 = fork();
+    if (c3 == 0) {
+        // Mélange des jaunes dès que les séparations sont prêtes (0.2s)
+        waitpid(c1, NULL, 0);    // Attend seulement les séparations (0.2s)
+        melanger_jaunes_choco(); // 0.2s (commence à 0.2s, fin à 0.4s)
+        return 0;
+    }
+
+    // Le processus principal attend :
+    waitpid(c2, NULL, 0); // Attend le chocolat fondu (1.2s)
+    waitpid(c3, NULL, 0); // Attend le mélange jaunes (0.4s)
+    incorporer_blancs_neige(); // 1.0s (commence à 1.2s, fin à 2.2s)
+
+    printf("PID %d : la mousse est terminée !\n", getpid());
 }
 
 void casser_chocolat(void)
