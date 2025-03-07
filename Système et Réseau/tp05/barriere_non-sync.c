@@ -7,7 +7,7 @@
 #define N 5
 #define COEFF_ATTENTE 50000
 pthread_mutex_t mutex;
-sem_t * sem;
+sem_t * sem; // sem_t sem pour linux 
 int verif = 0;
 
 /* attendre delai microsecondes */
@@ -23,7 +23,7 @@ int main(void)
 	pthread_t th[N];
 	srand(time(NULL));
 	pthread_mutex_init(&mutex, NULL);
-	sem = sem_open("/sem", O_CREAT, 0644, 0);
+	sem = sem_open("/sem", O_CREAT, 0644, 0); // sem_init(&sem,0,0) pour linux 
 
 	for (i = 0; i < N; ++i) {
 		nums[i] = i;
@@ -35,7 +35,7 @@ int main(void)
 	for (i = 0; i < N; ++i)
 		pthread_join(th[i], NULL);
 	pthread_mutex_destroy(&mutex);
-	sem_close(sem);
+	sem_close(sem); // sem_destroy(&sem); pour linux 
 	sem_unlink("/sem");
 	return 0;
 
@@ -49,11 +49,11 @@ void *chiffres_et_alphabet(void *arg)
 	verif++;
 	pthread_mutex_unlock(&mutex);
 	if (verif == N){
-		sem_post(sem);
+		sem_post(sem); // sem_post(&sem) pour linux
 	}
-	sem_wait(sem);
+	sem_wait(sem); // sem_wait(&sem) pour linux 
 	printf("%c\n", 'A' + i);
-	sem_post(sem);
+	sem_post(sem); // sem_post(&sem) pour linux 
 
 	return NULL;
 }
