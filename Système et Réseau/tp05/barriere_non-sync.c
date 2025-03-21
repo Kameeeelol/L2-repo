@@ -42,6 +42,7 @@ int main(void) {
   return 0;
 }
 
+<<<<<<< HEAD
 void *chiffres_et_alphabet(void *arg) {
   int i = *((int *)arg);
   printf("%d\n", i);
@@ -54,6 +55,21 @@ void *chiffres_et_alphabet(void *arg) {
   sem_wait(&sem); // sem_wait(&sem) pour linux
   printf("%c\n", 'A' + i);
   sem_post(&sem); // sem_post(&sem) pour linux
+=======
+void *chiffres_et_alphabet(void *arg)
+{
+	int i = *((int *) arg);
+	printf("%d\n", i);
+	pthread_mutex_lock(&mutex);
+	verif++;
+	pthread_mutex_unlock(&mutex);
+	if (verif == N){
+		sem_post(sem); // sem_post(&sem) pour linuxba
+	}
+	sem_wait(sem); // sem_wait(&sem) pour linux 
+	printf("%c\n", 'A' + i);
+	sem_post(sem); // sem_post(&sem) pour linux 
+>>>>>>> fc83e98 (new tp in Sys Réseaux)
 
   return NULL;
 }
