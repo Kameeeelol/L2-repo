@@ -19,7 +19,7 @@ int main (int argc, char* argv[]){
             int fd  = open(argv[i],O_RDONLY);
             if ( fd == -1 ){
                 perror("Ouverture");
-                return 0;
+                return 1;
             }
             char buffer[BUFFSIZE];
             ssize_t bytes_reads;
@@ -30,5 +30,5 @@ int main (int argc, char* argv[]){
             close(fd);
         }
     }
-    return 1;
+    return 0;
 }
