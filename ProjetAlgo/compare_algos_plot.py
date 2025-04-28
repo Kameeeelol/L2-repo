@@ -1,99 +1,91 @@
 #!/usr/bin/env python3
 
 """
-compare_algos_plot.py
+compare_algos_plot_fr.py
 
 Usage:
-  python compare_algos_plot.py results_backtracking.txt results_dp.txt ...
+  python compare_algos_plot_fr.py resultats_backtracking.txt resultats_dp.txt ...
 
 Description:
-  Reads multiple results files, each containing lines of the form:
-    n time cost parenthesization
-  where 'n' is the number of matrices, 'time' is the solve time for that instance,
-  'cost' is the best cost, and 'parenthesization' is a string representation of the
-  solution.
+  Lit plusieurs fichiers de résultats contenant des lignes de la forme:
+    n temps coût parenthésage
+  où 'n' est le nombre de matrices, 'temps' est le temps de résolution,
+  'coût' est le coût optimal, et 'parenthésage' est la solution.
 
-  For each file:
-    - Parse all (n, time) pairs
-    - Group times by n
-    - Compute the average solve time for each n
-    - Plot them on a shared graph for comparison.
-  The legend entry for each curve is derived from the filename (minus its extension).
+  Pour chaque fichier:
+    - Parse les couples (n, temps)
+    - Regroupe les temps par n
+    - Calcule le temps moyen pour chaque n
+    - Trace les courbes sur un même graphique pour comparaison.
 
-Example:
-  python compare_algos_plot.py results_backtracking.txt results_dp.txt
+  Le premier fichier tracé aura sa courbe en bleu, les autres conservent
+  la coloration par défaut.
 """
 
 import sys
 import statistics
 import matplotlib.pyplot as plt
+import numpy as np
 from collections import defaultdict
 import os
 
+
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python compare_algos_plot.py <resultsFile1> [<resultsFile2> ...]")
+        print("Usage: python compare_algos_plot_fr.py <fichierResultats1> [<fichierResultats2> ...]")
         sys.exit(1)
-    
-    # Prepare a figure
-    plt.figure()
-    
-    # Iterate over all result files passed as arguments
-    for results_file in sys.argv[1:]:
-        algo_name = os.path.splitext(os.path.basename(results_file))[0]
-        # e.g., "results_backtracking.txt" -> "results_backtracking"
-        
-        # Read lines of the form "n time cost parenthesization"
-        times_by_n = defaultdict(list)
-        
+
+    # Appliquer le style ggplot
+    plt.style.use('ggplot')
+    plt.figure(figsize=(10, 6))
+
+    # Parcourir tous les fichiers passés en argument
+    for idx, results_file in enumerate(sys.argv[1:]):
+        nom_algo = os.path.splitext(os.path.basename(results_file))[0]
+        # Transformer le nom pour la légende
+        legende = nom_algo.replace('_', ' ').capitalize()
+
+        # Lecture des données
+        temps_par_n = defaultdict(list)
         with open(results_file, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if not line:
+            for ligne in f:
+                parts = ligne.strip().split(maxsplit=3)
+                if len(parts) < 2:
                     continue
-                parts = line.split(maxsplit=3)
-                if len(parts) < 3:
-                    continue
-                n_str, time_str, cost_str = parts[0], parts[1], parts[2]
-                
                 try:
-                    n = int(n_str)
-                    t = float(time_str)
+                    n = int(parts[0])
+                    t = float(parts[1])
                 except ValueError:
-                    # ignore malformed lines
                     continue
-                
-                # Accumulate times for each n
-                times_by_n[n].append(t)
-        
-        # If no valid data was read from file, skip
-        if not times_by_n:
-            print(f"No valid data found in {results_file}, skipping.")
+                temps_par_n[n].append(t)
+
+        if not temps_par_n:
+            print(f"Aucune donnée valide trouvée dans {results_file}, omission.")
             continue
-        
-        # Sort by n and compute average time
-        Ns = sorted(times_by_n.keys())
-        avg_times = []
-        
-        for n in Ns:
-            arr = times_by_n[n]
-            mu = statistics.mean(arr)
-            avg_times.append(mu)
-        
-        # Plot on the same figure
-        plt.plot(Ns, avg_times, marker='o', label=algo_name)
-    
-    # Finalize the plot
-    plt.title("Comparison of Solve Times Across Algorithms")
-    plt.xlabel("n (number of matrices)")
-    plt.ylabel("Average Time (seconds)")
-    plt.grid(True)
-    plt.legend()
-    
-    # Save and show
-    plt.savefig("compare_algos_plot.png")
-    print("Comparison plot saved to compare_algos_plot.png")
+
+        # Tri et calcul des moyennes
+        Ns = sorted(temps_par_n.keys())
+        moyennes = [statistics.mean(temps_par_n[n]) for n in Ns]
+
+        # Tracé de la courbe
+        couleur = 'blue' if idx == 0 else None
+        plt.plot(Ns, moyennes, marker='o', label=legende, color=couleur)
+
+    # Personnalisation du graphique
+    plt.title("Comparaison des temps de résolution par algorithme", fontsize=16)
+    plt.xlabel("Nombre de matrices (n)", fontsize=14)
+    plt.ylabel("Temps moyen (secondes)", fontsize=14)
+    plt.xticks(np.arange(0, 21, 3))
+    plt.xlim(0, 20)
+    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+    plt.legend(fontsize=12)
+    plt.tight_layout()
+
+    # Sauvegarde et affichage
+    plt.savefig("comparaison_algos.png", dpi=300)
+    print("Le graphique comparatif a été enregistré sous 'comparaison_algos.png'.")
     plt.show()
+
 
 if __name__ == "__main__":
     main()

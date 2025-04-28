@@ -1,0 +1,13 @@
+gcc generate_instances.c -o generate_instances
+
+gcc solve_backtracking.c -o solve_backtracking
+
+gcc solve_backtracking.c -o solve_backtracking_opt
+
+./generate_instances 2 15 3 100 instances.txt
+
+./solve_backtracking instances.txt results_backtracking.txt
+
+./solve_backtracking_opt instances.txt results_backtracking_opt.txt
+
+python3 compare_algos_plot.py results_backtracking.txt results_backtracking_opt.txt
