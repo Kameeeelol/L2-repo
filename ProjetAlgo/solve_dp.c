@@ -72,9 +72,9 @@ int main(int argc, char *argv[]) {
         char bestTree[MAXREPR] = "";
         build_repr(1, n, bestTree);
         clock_t end = clock();
-
+        double timeSec = (double)(end - start) / CLOCKS_PER_SEC;
         fprintf(fout, "%d %.6f %lld %s\n", n, (double)(end - start)/CLOCKS_PER_SEC, dp[1][n], bestTree);
-        printf("[Progress] Instance %d: n=%d, cost=%lld\n", inst+1, n, dp[1][n]);
+        printf("[Progress] Instance %d: n=%d, time=%.6f, cost=%lld\n", inst+1, n, timeSec, dp[1][n]);
     }
 
     fclose(fin); fclose(fout);

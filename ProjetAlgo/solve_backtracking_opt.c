@@ -1,5 +1,5 @@
 /********************************************************************
- * solve_backtracking.c avec élagage 
+ * solve_backtracking.c avec élagage
  *
  * Usage:
  *   ./solve_backtracking <inputFile> <outputFile>
@@ -87,9 +87,11 @@ static Node combineNodes(const Node *A, const Node *B)
 /* -------------- Backtracking -------------- */
 static void backtrack(int i)
 {
+     
     if (bestCost <= stack[top].cost)
-        return;
-        
+    	return;
+
+
     /* Case 1: SHIFT if i <= n */
     if (i <= n) {
         Node leaf = makeLeaf(i);

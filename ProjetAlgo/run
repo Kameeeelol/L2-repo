@@ -1,8 +1,12 @@
+#!/bin/sh
+
 gcc generate_instances.c -o generate_instances
 
 gcc solve_backtracking.c -o solve_backtracking
 
-gcc solve_backtracking.c -o solve_backtracking_opt
+gcc solve_backtracking_opt.c -o solve_backtracking_opt
+
+gcc solve_dp.c -o solve_dp
 
 ./generate_instances 2 15 3 100 instances.txt
 
@@ -10,4 +14,6 @@ gcc solve_backtracking.c -o solve_backtracking_opt
 
 ./solve_backtracking_opt instances.txt results_backtracking_opt.txt
 
-python3 compare_algos_plot.py results_backtracking.txt results_backtracking_opt.txt
+./solve_dp instances.txt results_dp.txt
+
+python3 compare_algos_plot.py results_backtracking.txt results_backtracking_opt.txt results_dp.txt

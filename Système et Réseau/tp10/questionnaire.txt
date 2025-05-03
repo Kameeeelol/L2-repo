@@ -1,0 +1,73 @@
+question
+Que signifie UDP ?
+Union des Démocrates Populaires
+Unspecified Data Protocol
+User Datagram Protocol
+Unordered Distribution Protocol
+reponse
+2
+question
+9a:1b:c2:70:05:9f peut être une adresse :
+MAC
+IPv4
+IPv6
+Aucune des autres réponses
+postale
+reponse
+0
+question
+Que signifie IP dans le cadre de ce cours ?
+Internationale Prolétarienne
+Internet Protocol
+Internet Path
+"Je fais pipi" en anglais abrégé
+reponse
+1
+question
+Soit l'adresse IPv4 (avec CIDR) 55.132.54.42/20. Alors, l'adresse du réseau est :
+55.128.40.0
+55.132.32.0
+55.128.0.0
+55.132.48.0
+reponse
+3
+question
+Parmi ces éléments, lequel est contenu dans une en-tête Ethernet~?
+l'adresse IP de la source
+l'adresse MAC de la source
+le port de la source
+le nom de domaine de la destination
+reponse
+1
+question
+Soit un hôte d'adresse IPv4 (avec CIDR) 42.43.173.251/12 sur un réseau. Quelle est l'adresse de broadcast sur ce réseau~?
+42.47.255.255
+42.43.175.255
+42.46.255.255
+42.43.173.255
+reponse
+0
+question
+Un datagramme est :
+une unité de mesure de la quantité de données.
+un court message envoyé par un processus à destination d'un autre processus, avec un début et une fin.
+un flux d'octets envoyé par un processus à destination d'un autre processus.
+un flux d'octets entre deux interfaces réseau.
+reponse
+1
+question
+Pour créer un socket UDP avec des adresses IPv4 dans un programme en C, on écrit~:
+socket(IPV_4, UDP, 0)
+socket(AF_INET, SOCK_STREAM, 0)
+socket(IPV_4, TCP, 0)
+socket(AF_INET, SOCK_DGRAM, 0)
+reponse
+3
+question
+Les numéros de port...
+permettent aux routeurs d'Internet d'envoyer les paquets aux bonnes machines.
+permettent aux switchs d'un réseau local de transmettre les trames aux bonnes machines.
+permettent au système d'exploitation de transmettre les messages aux bons processus.
+permettent aux cartes wifi ou aux cartes Ethernet d'envoyer les signaux électriques dans les bons circuits de la machine.
+reponse
+2
