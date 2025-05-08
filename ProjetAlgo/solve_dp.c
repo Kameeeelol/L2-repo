@@ -22,7 +22,7 @@ long long dp[MAXN][MAXN];
 int split[MAXN][MAXN];
 int d[MAXN + 1];
 
-/* Reconstruit la parenthésation optimale */
+/* Reconstruit la parenthésation optimale */ 
 void build_repr(int i, int j, char *repr) {
     static char buffer[MAXREPR];
     if (i == j) {

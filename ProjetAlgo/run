@@ -8,6 +8,10 @@ gcc solve_backtracking_opt.c -o solve_backtracking_opt
 
 gcc solve_dp.c -o solve_dp
 
+gcc solve_greedy1.c -o solve_greedy1
+
+gcc solve_greedy2.c -o solve_greedy2
+
 ./generate_instances 2 15 3 100 instances.txt
 
 ./solve_backtracking instances.txt results_backtracking.txt
@@ -16,4 +20,8 @@ gcc solve_dp.c -o solve_dp
 
 ./solve_dp instances.txt results_dp.txt
 
-python3 compare_algos_plot.py results_backtracking.txt results_backtracking_opt.txt results_dp.txt
+./solve_greedy1 instances.txt results_greedy1.txt
+
+./solve_greedy2 instances.txt results_greedy2.txt
+
+python3 compare_algos_plot.py results_backtracking.txt results_backtracking_opt.txt results_dp.txt results_greedy1.txt results_greedy2.txt
