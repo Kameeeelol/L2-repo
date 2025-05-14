@@ -1,0 +1,28 @@
+#!/bin/sh
+
+
+gcc generate_instances.c -o generate_instances
+
+gcc solve_greedy1.c -o solve_greedy1
+
+gcc solve_greedy2.c -o solve_greedy2
+
+gcc solve_greedy3.c -o solve_greedy3
+
+gcc compare_algo_greedy.c -o compare_algo_greedy
+
+
+./generate_instances 2 10 3 100 instances_greedy.txt
+
+
+./solve_greedy1 instances_greedy.txt results_greedy1.txt
+
+./solve_greedy2 instances_greedy.txt results_greedy2.txt
+
+./solve_greedy3 instances_greedy.txt results_greedy3.txt
+
+
+./compare_algos_greedy instances_greedy.txt results
+
+
+python3 compare_algos_plot.py results_greedy1.txt results_greedy2.txt results_greedy3.txt
