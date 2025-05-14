@@ -35,14 +35,14 @@ int main(int argc, char *argv[])
 	
 	struct pollfd fds[2];
    
-    fds[0].fd = stdin;   
+    fds[0].fd = 0;   
     fds[0].events = POLLIN;
     fds[1].fd = connect_sock;    
     fds[1].events = POLLIN;
 	
 	char buff[BUFFER_SIZE];
 	
-	while (1){
+	for (;;){
         int attendre = poll(fds, 2, -1);
         if (attendre == -1) {
             perror("poll");

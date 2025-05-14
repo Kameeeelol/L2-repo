@@ -46,6 +46,21 @@ Result greedy2(int d[], int i, int j) {
     return res;
 }
 
+/* int main() {
+    // Exemple : d = [10, 100, 5, 50, 20] => M1(10x100), M2(100x5), etc.
+    int d[] = {5, 100, 2, 50, 10};
+    int n = sizeof(d) / sizeof(d[0]) -1;
+
+    Result *test = malloc(sizeof(Result));
+    *test = greedy2(d, 1, n);
+
+    printf("Parenthésation gloutonne 1 : %s\n", test->repr);
+    printf("Coût total estimé : %lld\n", test->cost);
+
+    return 0;
+}*/
+
+
 int main(int argc, char *argv[]) {
     if (argc < 3) {
         fprintf(stderr, "Usage: %s <inputFile> <outputFile>\n", argv[0]);
