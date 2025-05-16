@@ -22,7 +22,7 @@ gcc compare_algo_greedy.c -o compare_algo_greedy
 ./solve_greedy3 instances_greedy.txt results_greedy3.txt
 
 
-./compare_algos_greedy instances_greedy.txt results
+./compare_algo_greedy instances_greedy.txt results
 
 
 python3 compare_algos_plot.py results_greedy1.txt results_greedy2.txt results_greedy3.txt

@@ -247,10 +247,12 @@ int main(int argc, char *argv[])
    }
     
    fprintf(fout, "Voici les résulats finaux: \n");
+    printf("Voici les résulats finaux: \n");
    
    for (int i=0; i<3; i++) {
    		
    	fprintf(fout, "algo %s a un écart moyen de %.2f\n", names[i], (double) res[i].accu / res[i].nb_lecture);
+    printf("algo %s a un écart moyen de %.2f\n", names[i], (double) res[i].accu / res[i].nb_lecture);
    		
    }
    	
@@ -261,3 +263,4 @@ int main(int argc, char *argv[])
     return 0;
 
 }
+

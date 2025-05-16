@@ -8,6 +8,7 @@
 #include <string.h>
 #include "list/list.h"
 #include "user.h"
+#include "msg_client.h"
 
 #define PORT_FREESCORD 4321
 #define BUFFER_SIZE 1024  // Déclaration globale de la taille du buffer
@@ -71,15 +72,19 @@ int main(int argc, char *argv[])
 void *handle_client(void *user)
 {
 	struct user *client = (struct user *)user;
+	struct msg_client msg;
+	msg.fd = client->sock;
 	char buff[BUFFER_SIZE];
 	ssize_t n;
-	char msg_to_send[BUFFER_SIZE];
+	char *msg_to_send;
 	while ( (n = read(client->sock, (char *) buff, sizeof(buff))) > 0){
 		buff[n] = '\0';
-		memset(msg_to_send, 0, sizeof(msg_to_send));
-		sprintf(msg_to_send, "[%d] says: %s", client->sock, buff);
+		msg.msg = buff;
+		msg_to_send = serialisation(&msg);
+		//memset(msg_to_send, 0, sizeof(msg_to_send));
+		//sprintf(msg_to_send, "[%d] says: %s", client->sock, buff);
 		pthread_mutex_lock(&mutex_list);
-		if ((write(tube[1], msg_to_send, strlen(msg_to_send))) == -1){
+		if ((write(tube[1], msg_to_send, length_msg(&msg))) == -1){
 			perror("write");
 			break;
 		}
@@ -141,17 +146,37 @@ void *repeteur(void *arg){
 	ssize_t n;
 	for (;;){
 		n = read(tube[0], (char *)buff, sizeof(buff));
+		struct msg_client *msg = deserialisation((char *)buff);
+		size_t prefix_len = snprintf(NULL, 0, "[%d] says: ", msg->fd);
+		size_t msg_len = strlen(msg->msg);
+		size_t total_len = prefix_len + msg_len + 1;
+		char *msg_to_send = malloc(total_len);
+		if (!msg_to_send) {
+            perror("malloc");
+            free(msg->msg);
+            free(msg);
+            continue;
+        }
+		snprintf(msg_to_send, total_len, "[%d] says: %s", msg->fd, msg->msg);
 		if (n < 0) continue;
 		pthread_mutex_lock(&mutex_list);
         struct node *curr = list_utilisateurs->first;
 		while (curr != NULL) {
 			struct user *client = (struct user *)curr->elt;
-			if (write(client->sock, buff, n) != n) {
-                perror("write");
-            }
+			if (client->sock != msg->fd){
+				ssize_t lu = 0;
+				while (lu < (ssize_t) (total_len-1)){
+					ssize_t w = write(client->sock, msg_to_send + lu, total_len - 1 - lu);
+					if (w <= 0 ) break;
+					lu += w;
+				}
+			}
 			curr = curr->next;
         }
         pthread_mutex_unlock(&mutex_list);
+		free(msg->msg);
+		free(msg_to_send);
+		free(msg);
 	}
 	return NULL;
 }

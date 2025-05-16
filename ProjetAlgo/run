@@ -24,4 +24,4 @@ gcc solve_greedy2.c -o solve_greedy2
 
 ./solve_greedy2 instances.txt results_greedy2.txt
 
-python3 compare_algos_plot.py results_backtracking.txt results_backtracking_opt.txt results_dp.txt results_greedy1.txt results_greedy2.txt
+python3 compare_algos_plot.py results_backtracking_opt.txt results_dp.txt 

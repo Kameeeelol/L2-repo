@@ -22,7 +22,7 @@ int connect_serveur_tcp(char *adresse, uint16_t port);
 int main(int argc, char *argv[])
 {
 	if (argc < 2){
-		perror("argc:");
+		perror("argc");
 		exit(EXIT_FAILURE);
 	}
 	char *adresse = argv[1];
@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
     fds[1].fd = connect_sock;    
     fds[1].events = POLLIN;
 	
+	buffer *buffsock = buff_create(connect_sock, BUFFER_SIZE);
+	char ligne[BUFFER_SIZE];
 	char buff[BUFFER_SIZE];
 	
 	for (;;){
@@ -48,7 +50,7 @@ int main(int argc, char *argv[])
             perror("poll");
             break;
         }
-		if (fds[0].revents && POLLIN){
+		if (fds[0].revents){
 			if ( fgets(buff, sizeof(buff), stdin) != NULL){
 				size_t len = strlen(buff);
 				if (write(connect_sock, (char *)buff, len) != len){
@@ -57,7 +59,7 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
-		if(fds[1].revents && POLLIN){	
+		if(fds[1].revents){	
 			ssize_t n = read(connect_sock, (char *)buff, sizeof(buff)-1);
 			if (n < 0){
 				perror("read:");
@@ -68,7 +70,6 @@ int main(int argc, char *argv[])
 				break;
 			}
 			buff[n] = '\0';
-			printf("[%d] Says :", connect_sock);
 			fputs(buff, stdout);	
 		}
 	}
