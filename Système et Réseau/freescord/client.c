@@ -1,3 +1,8 @@
+/* Kamal Seggari 12203821
+Je déclare qu'il s'agit de mon propre travail.
+Ce travail a été réalisé intégralement par un être humain. */
+
+#include <stddef.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <fcntl.h>
@@ -45,7 +50,19 @@ int main(int argc, char *argv[])
 	char buff[BUFFER_SIZE];
 	
 	for (;;){
-        int attendre = poll(fds, 2, -1);
+        
+		fflush(stdout);
+		while (buff_ready(buffsock)) {
+			if (buff_fgets(buffsock, ligne, sizeof(ligne))) {
+				if (strcmp(ligne, "\n") == 0 || strcmp(ligne, "\r\n") == 0) break;
+				size_t length = strlen(ligne);
+				write(1, ligne, length);
+			}else {
+				break; // ligne incomplete donc on attend 
+			}
+		}
+		
+		int attendre = poll(fds, 2, -1);
         if (attendre == -1) {
             perror("poll");
             break;
@@ -59,7 +76,22 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
-		if(fds[1].revents){	
+		if (fds[1].revents) {
+			if (!buff_ready(buffsock)) {
+				int c = buff_getc(buffsock);
+				if (c == -1){
+					perror("read");
+					break;
+				}
+				// Reposer le caractère pour qu’il soit relu par buff_fgets
+          	if (buff_ungetc(buffsock, c) == -1) {
+              	fprintf(stderr, "Erreur : double ungetc ou buffer corrompu\n");
+              	break;
+          }
+
+			}
+		}
+		/*if(fds[1].revents){	
 			ssize_t n = read(connect_sock, (char *)buff, sizeof(buff)-1);
 			if (n < 0){
 				perror("read:");
@@ -71,8 +103,9 @@ int main(int argc, char *argv[])
 			}
 			buff[n] = '\0';
 			fputs(buff, stdout);	
-		}
+		}*/
 	}
+	buff_free(buffsock);
 	close(connect_sock);
 	return 0;
 }

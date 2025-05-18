@@ -1,3 +1,7 @@
+/* Kamal Seggari 12203821
+Je déclare qu'il s'agit de mon propre travail.
+Ce travail a été réalisé intégralement par un être humain. */
+
 #ifndef MSG_CLIENT_H
 #define MSG_CLIENT_H value
 #include <stdlib.h>
@@ -7,6 +11,7 @@
 struct msg_client{
     int fd;
     char *msg;
+    char *pseudo;
 };
 
 // creat struct msg_client

@@ -1,4 +1,6 @@
 #include <string.h>
+#include <stdlib.h>
+
 char *crlf_to_lf(char *line_with_crlf)
 {
 	if (line_with_crlf == NULL) return NULL;

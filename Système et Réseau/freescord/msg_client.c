@@ -1,3 +1,5 @@
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "msg_client.h"
@@ -19,20 +21,27 @@
 }*/
 
 char *serialisation(struct msg_client *msg){
-    char *tab = malloc(sizeof(int)+strlen(msg->msg));
+    size_t length = length_msg(msg);
+    char *tab = malloc(length);
     *((int *)tab) = msg->fd;
-    memcpy(tab+sizeof(int), msg->msg, strlen(msg->msg)+1);
+    size_t msg_length = strlen(msg->msg);
+    memcpy(tab+sizeof(int), msg->msg, msg_length+1);
+    memcpy(tab+sizeof(int)+msg_length+1, msg->pseudo, strlen(msg->pseudo)+1);
     return tab;
 }
 
 struct msg_client *deserialisation(char *tab){
     struct msg_client *msg = malloc(sizeof(struct msg_client));
     msg->fd = *((int *) tab);
-    msg->msg = malloc(strlen(tab+sizeof(int))+1);
-    memcpy(msg->msg, tab + sizeof(int), strlen(tab+sizeof(int))+1);
+    uint32_t offset = strlen(tab+sizeof(int)) + 1;
+    msg->msg = malloc(offset);
+    memcpy(msg->msg, tab + sizeof(int), offset);
+    offset += sizeof(int); 
+    msg->pseudo = malloc(strlen(tab + offset)+1);
+    memcpy(msg->pseudo, tab + offset, strlen(tab + offset)+1);
     return msg;
 }
 
 size_t length_msg(struct msg_client *msg){
-    return sizeof(int)+strlen(msg->msg)+1;
+    return sizeof(int)+strlen(msg->msg)+strlen(msg->pseudo)+2;
 }
